@@ -38,7 +38,7 @@ class VendingMachine:
             "4": {
                 "ops": self.process_payment,
                 "command_name": "Make a Payment",
-                "prompt": "Enter your balance :\n================================",
+                "prompt": "Enter your balance :\n================================\nOnly accepting 5, 10, 20 dollar bills",
                 "follow_ups": ["1", "2", "3", "4", "5"],
             },
             "5": {
