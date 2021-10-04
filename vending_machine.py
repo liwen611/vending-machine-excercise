@@ -50,9 +50,10 @@ class VendingMachine:
 
     def get_inventory(self, data_input):
         """
-        method take a local file path or a list of items as inventory for the vending machine
+        method take a local file path represent inventory for the vending machine
         turn all the inventory into Item class object for easier parsing later
         """
+        #TODO use csv reader instead, try except block 
         if os.path.isfile(data_input):
             with open(data_input, "r") as infile:
                 data = infile.readlines()
@@ -78,6 +79,10 @@ class VendingMachine:
                 print(idx, item.name, item.price, "==>", item.status)
         else:
             print("Vending Machine is empty today!")
+    
+    #TODO
+    def add_inventory(self):
+        pass
 
     def display_available_items(self):
         """
@@ -90,11 +95,11 @@ class VendingMachine:
                 print(idx, item.name, item.price, "==>", item.status)
 
     def select_item(self):
-        # get prompt
+        # TODO try except block in case use does not enter an input
         idx = int(input("Enter the number of the item you would like to select :"))
 
         if idx not in self.sales_logs:
-            print(f"{idx} not offered by the Vending Machine")
+            print(f"{idx} not offered by the Vending Machine") # TODO: print out the product name instead
             self.display_inventory()
         elif self.sales_logs[idx].status != "Available":
             print("This item is sold out!")
@@ -115,6 +120,7 @@ class VendingMachine:
         return False
 
     def process_payment(self):
+        #TODO :what if it does not have enough change
         balance = int(input("Enter the balance you have in your wallet :"))
 
         while not self.selection:
@@ -145,17 +151,25 @@ class VendingMachine:
         operation = self.control_flow_map[command_input]
         self.show_prompt(operation)
 
-        ops = operation.get("ops")
-        if ops:
-            ops()
+        if "ops" in operation: 
+           ops = operation["ops"]
+           ops()
 
         for follow_up in operation.get("follow_ups", []):
             follow_up_operation = self.control_flow_map[follow_up]
+            # TODO turn this into a fstring for readibily 
             print(
                 "Enter", follow_up, "to ", follow_up_operation["command_name"]
             )
-            command_input = input()
-            if command_input:
-                self.handle_command(command_input)
+
+        # executing new command input
+        new_command_input = input()
+        if new_command_input and new_command_input in self.control_flow_map:
+            self.handle_command(new_command_input)
+        else:
+            print(f"{new_command_input} is not valid. Please try again!")
+            self.handle_command(command_input)
+        
+            
 
  
