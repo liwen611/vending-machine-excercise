@@ -1,5 +1,6 @@
 import os
 from item import Item
+import csv 
 
 
 class VendingMachine:
@@ -50,22 +51,30 @@ class VendingMachine:
 
     def get_inventory(self, data_input):
         """
-        method take a local file path represent inventory for the vending machine
-        turn all the inventory into Item class object for easier parsing later
+        method take a local csv file path represent inventory for the vending machine
+        overwrite the sales logs as a list of  Item class object for easier parsing later
         """
-        #TODO use csv reader instead, try except block 
-        if os.path.isfile(data_input):
-            with open(data_input, "r") as infile:
-                data = infile.readlines()
+        with open(data_input) as csvfile:
+            reader = csv.DictReader(csvfile)
+            for idx, row in enumerate(reader):
+                name = row["item"]
+                price = row["price"]
+                it = Item(name, float(price))
+                self.sales_logs[idx] = it
+                
 
-        for idx, item in enumerate(data):
-            if idx == 0:
-                continue
-            item = item.strip("\n")
-            name, price = item.split(",")
-            it = Item(name, float(price))
-            # add item to sales logs
-            self.sales_logs[idx] = it
+        # if os.path.isfile(data_input):
+        #     with open(data_input, "r") as infile:
+        #         data = infile.readlines()
+
+        # for idx, item in enumerate(data):
+        #     if idx == 0:
+        #         continue
+        #     item = item.strip("\n")
+        #     name, price = item.split(",")
+        #     it = Item(name, float(price))
+        #     # add item to sales logs
+        #     self.sales_logs[idx] = it
 
         print("Vending maching is well stocked again!")
 
